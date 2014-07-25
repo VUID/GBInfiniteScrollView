@@ -924,23 +924,25 @@ static CGFloat const GBAutoScrollDefaultInterval = 3.0f;
         NSLog(@"Running %@ '%@'", self.class, NSStringFromSelector(_cmd));
     }
     
+	NSInteger previousIndex = self.currentPageIndex;
     CGPoint currentContentOffset = [self contentOffset];
     if (self.scrollDirection == GBScrollDirectionHorizontal) {
         CGFloat distanceFromCenterOffsetX = fabs(currentContentOffset.x - [self centerContentOffsetX]);
-        
+		
         if (distanceFromCenterOffsetX == [self distanceFromCenterOffsetX]) {
             if (currentContentOffset.x == [self minContentOffsetX]) {
                 [self previous];
-                [self didScrollToPreviousPage];
+                if (previousIndex != self.currentPageIndex) [self didScrollToPreviousPage];
             } else if (currentContentOffset.x == [self maxContentOffsetX]) {
-                [self next];
-                [self didScrollToNextPage];
+				[self next];
+                if (previousIndex != self.currentPageIndex) [self didScrollToNextPage];
             }
-            
-            [self updateNumberOfPages];
-            [self resetVisiblePages];
-            [self recenterCurrentView];
-            [self setupTimer];
+			
+			
+			[self updateNumberOfPages];
+			[self resetVisiblePages];
+			[self recenterCurrentView];
+			[self setupTimer];
         }
     } else {
         CGFloat distanceFromCenterOffsetY = fabs(currentContentOffset.y - [self centerContentOffsetY]);
@@ -948,10 +950,10 @@ static CGFloat const GBAutoScrollDefaultInterval = 3.0f;
         if (distanceFromCenterOffsetY == [self distanceFromCenterOffsetY]) {
             if (currentContentOffset.y == [self minContentOffsetY]) {
                 [self previous];
-                [self didScrollToPreviousPage];
+                if (previousIndex != self.currentPageIndex) [self didScrollToPreviousPage];
             } else if (currentContentOffset.y == [self maxContentOffsetY]) {
                 [self next];
-                [self didScrollToNextPage];
+                if (previousIndex != self.currentPageIndex) [self didScrollToNextPage];
             }
             
             [self updateNumberOfPages];
